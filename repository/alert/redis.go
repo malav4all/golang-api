@@ -50,7 +50,7 @@ var ErrNotExist = errors.New("alert does not exist")
 
 func (r *RedisRepo) FindByID(ctx context.Context, id uint64) (model.Alert, error) {
 	key := alertIDKey(id)
-
+	fmt.Println(key)
 	value, err := r.Client.Get(ctx, key).Result()
 	if errors.Is(err, redis.Nil) {
 		return model.Alert{}, ErrNotExist

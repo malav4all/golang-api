@@ -29,7 +29,7 @@ func (a *App) loadAlertRoutes(router chi.Router) {
 
 	router.Post("/", alertHandler.Create)
 	router.Get("/", alertHandler.ListAlert)
-	// router.Get("/{id}",alertHandler.UpdateById)
-	router.Put("/", alertHandler.UpdateById)
+	router.Get("/{id}", alertHandler.GetAlertId)
+	router.Put("/{id}", alertHandler.UpdateById)
 	router.Delete("/{id}", alertHandler.DeleteById)
 }
