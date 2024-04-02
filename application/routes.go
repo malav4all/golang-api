@@ -1,21 +1,31 @@
 package application
 
 import (
+	"net/http"
+
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/malav4all/golang-api/handler"
+	"github.com/malav4all/golang-api/repository/alert"
 )
 
-func loadRoutes() *chi.Mux {
+func (a *App) loadRoutes() {
 	router := chi.NewRouter()
 	router.Use(middleware.Logger)
-	router.Route("/alert", loadAlertRoutes)
+	router.Get("/", func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+	})
+	router.Route("/alert", a.loadAlertRoutes)
 
-	return router
+	a.router = router
 }
 
-func loadAlertRoutes(router chi.Router) {
-	alertHandler := &handler.Alert{}
+func (a *App) loadAlertRoutes(router chi.Router) {
+	alertHandler := &handler.Alert{
+		Repo: &alert.RedisRepo{
+			Client: a.rdb,
+		},
+	}
 
 	router.Post("/", alertHandler.Create)
 	router.Get("/", alertHandler.ListAlert)
